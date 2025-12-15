@@ -1,0 +1,436 @@
+.checkout-page {
+  max-width: 1120px;
+  margin: 24px auto 40px auto;
+  padding: 0 18px;
+}
+
+/* HEADER */
+
+.checkout-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.checkout-header p {
+  color: #6b7280;
+  font-size: 0.96rem;
+  margin-bottom: 14px;
+}
+
+/* STEPS */
+
+.checkout-steps {
+  display: flex;
+  gap: 24px;
+  margin-top: 8px;
+  margin-bottom: 18px;
+}
+
+.step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.step .circle {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 2px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+}
+
+.step-icon {
+  font-size: 18px;
+}
+
+.step.done {
+  color: #16a34a;
+}
+
+.step.done .circle {
+  background: #22c55e;
+  border-color: #22c55e;
+  color: #ffffff;
+}
+
+.step.active {
+  color: #111827;
+}
+
+.step.active .circle {
+  border-color: #22c55e;
+}
+
+/* LAYOUT PRINCIPAL */
+
+.checkout-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.5fr);
+  gap: 24px;
+  margin-top: 8px;
+}
+
+/* CARDS */
+
+.checkout-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 20px 20px 18px 20px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.checkout-card h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #111827;
+}
+
+.checkout-card .subtitle {
+  font-size: 0.86rem;
+  color: #6b7280;
+  margin-bottom: 18px;
+}
+
+/* FORMULARIO */
+
+.checkout-form .form-group {
+  margin-bottom: 14px;
+}
+
+.checkout-form label {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.checkout-form .form-control {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+}
+
+.checkout-form .form-control:focus {
+  outline: none;
+  border-color: #22c55e;
+  box-shadow: 0 0 0 1px #22c55e33;
+}
+
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon .form-control {
+  padding-left: 34px; /* espacio para el ícono */
+}
+
+.input-icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #9ca3af;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* BOTÓN CONFIRMAR */
+
+.btn-confirmar {
+  margin-top: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 20px;
+  background: #22c55e;
+  color: white;
+  font-weight: 600;
+  font-size: 0.98rem;
+  box-shadow: 0 10px 25px rgba(34, 197, 94, 0.35);
+}
+
+.btn-confirmar[disabled] {
+  opacity: 0.6;
+  box-shadow: none;
+  cursor: default;
+}
+
+.warning-minimo {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #ea580c;
+}
+
+/* RESUMEN */
+
+.checkout-summary .summary-list {
+  margin-top: 12px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 10px 10px 6px 10px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 2px;
+  border-bottom: 1px dashed #e5e7eb;
+  font-size: 0.86rem;
+}
+
+.summary-item:last-child {
+  border-bottom: none;
+}
+
+.summary-name {
+  font-weight: 500;
+  color: #111827;
+}
+
+.summary-detail {
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.summary-price {
+  font-weight: 600;
+  color: #111827;
+}
+
+/* FOOTER RESUMEN */
+
+.summary-footer {
+  margin-top: 14px;
+  border-radius: 12px;
+  background: #f9fafb;
+  padding: 10px 10px 8px 10px;
+  font-size: 0.9rem;
+}
+
+.summary-footer .line {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.summary-footer .total span:last-child {
+  font-weight: 700;
+}
+
+/* NOTA */
+
+.summary-note {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* ESTADO SIN PEDIDO */
+
+.checkout-empty {
+  max-width: 600px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+.checkout-empty h2 {
+  font-size: 1.4rem;
+  margin-bottom: 4px;
+}
+
+.checkout-empty p {
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.btn-volver {
+  border: none;
+  border-radius: 999px;
+  padding: 8px 20px;
+  background: #22c55e;
+  color: white;
+  font-weight: 600;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+  .checkout-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.summary-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 500;
+  color: #111827;
+}
+
+.summary-bullet {
+  font-size: 18px;
+  color: #16a34a;
+}
+
+.total-pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #166534;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.field-error {
+  margin-top: 3px;
+  font-size: 0.78rem;
+  color: #dc2626;
+}
+
+/* Controles de cantidad en resumen */
+
+.summary-qty {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.summary-qty button {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e5e7eb;
+  padding: 0;
+}
+
+.summary-qty button i {
+  font-size: 16px;
+}
+
+.summary-qty span {
+  font-size: 0.86rem;
+  min-width: 16px;
+  text-align: center;
+}
+
+.summary-remove {
+  background: transparent !important;
+  color: #9ca3af;
+}
+
+.summary-remove i {
+  font-size: 18px;
+}
+
+/* botón para volver al catálogo */
+
+.btn-volver-catalogo {
+  margin-top: 10px;
+  border: none;
+  border-radius: 999px;
+  padding: 7px 14px;
+  font-size: 0.85rem;
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+/* Animación suave de producto al actualizar */
+@keyframes pulse-card {
+  0%   { transform: translateY(0) scale(1); }
+  50%  { transform: translateY(-2px) scale(1.01); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.product-card--pulse {
+  animation: pulse-card 0.22s ease-out;
+}
+
+/* Rebote del total (barra flotante y resumen) */
+@keyframes bounce-total {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.06); }
+  60%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+.cart-floating--bounce,
+.summary-footer--bounce .total-pill {
+  animation: bounce-total 0.25s ease-out;
+}
+
+/* Un poquito de feedback en los botones +/- */
+.summary-qty button,
+.product-qty button {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.summary-qty button:active,
+.product-qty button:active {
+  transform: scale(0.92);
+}
+
+.telefono-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.btn-link-edit {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #16a34a;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-link-edit:hover {
+  text-decoration: underline;
+}
+
+.form-control[readonly] {
+  background-color: #f3f4f6;
+  cursor: default;
+}
+
+.field-hint {
+  margin-top: 4px;
+  font-size: 0.75rem;
+  color: #6b7280;
+}

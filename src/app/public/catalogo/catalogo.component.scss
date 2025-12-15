@@ -1,0 +1,636 @@
+.catalog-page {
+  padding-bottom: 92px;
+}
+
+/* ======================================
+   NAV SUPERIOR DEL CATÁLOGO
+   ====================================== */
+
+.catalog-nav {
+  margin: 16px auto 0 auto;
+  max-width: 1120px;
+  padding: 12px 18px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.catalog-nav__left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.catalog-nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #166534;
+}
+
+.catalog-nav__links a {
+  margin: 0 8px;
+  font-size: 0.9rem;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+.catalog-nav__links a:hover {
+  color: #166534;
+}
+
+.btn-primary-nav {
+  background: #22c55e;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 999px;
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 0 0 3px #bbf7d0;
+}
+
+.btn-primary-nav[disabled] {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+}
+
+/* ======================================
+   DAY BAR (Stock de hoy)
+   ====================================== */
+
+.daybar {
+  max-width: 1120px;
+  margin: 14px auto 0 auto;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(0,0,0,.035);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.daybar__title {
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+.daybar__subtitle {
+  margin-top: 3px;
+  font-size: 0.88rem;
+  color: #6b7280;
+}
+
+.daybar .muted {
+  opacity: .85;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+  background: #9ca3af;
+}
+
+.dot--ok {
+  background: #22c55e;
+}
+
+.btn-daybar {
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  background: #ffffff;
+  color: #166534;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
+  white-space: nowrap;
+}
+
+/* ======================================
+   HERO (solo primera visita)
+   ====================================== */
+
+.hero-rappi {
+  max-width: 1120px;
+  margin: 12px auto 0 auto;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #ffffff;
+  padding: 32px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-rappi h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.hero-rappi p {
+  font-size: 0.98rem;
+  opacity: 0.95;
+}
+
+.btn-hero {
+  margin-top: 16px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: none;
+  background: #ffffff;
+  color: #166534;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.25);
+}
+
+/* ======================================
+   EMPTY STATE
+   ====================================== */
+
+.empty-state {
+  padding: 16px;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.empty-state__box {
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: rgba(0,0,0,.04);
+}
+
+.empty-state__hint {
+  opacity: .8;
+  margin-top: 4px;
+}
+
+/* ======================================
+   GRID DE PRODUCTOS
+   ====================================== */
+
+.catalog-grid {
+  max-width: 1120px;
+  margin: 22px auto 0 auto;
+  padding: 0 4px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 22px;
+}
+
+/* ======================================
+   CARD DE PRODUCTO
+   ====================================== */
+
+.product-card {
+  background: #ffffff;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  position: relative;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.16);
+}
+
+.product-card--out {
+  opacity: 0.85;
+}
+
+/* BADGE */
+.product-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.95);
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  z-index: 2;
+}
+
+.badge-out {
+  background: rgba(107,114,128,.95);
+}
+
+.badge-low {
+  background: rgba(245, 158, 11, 0.95);
+}
+
+/* IMAGEN */
+.product-image-wrapper {
+  width: 100%;
+  height: 170px;
+  overflow: hidden;
+  border-radius: 22px 22px 0 0;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* INFO */
+.product-info {
+  padding: 16px 16px 14px 16px;
+}
+
+.product-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.product-desc {
+  font-size: 0.86rem;
+  color: #6b7280;
+  margin-bottom: 10px;
+}
+
+/* META */
+.product-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.meta-item {
+  min-width: 120px;
+}
+
+.meta-label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #9ca3af;
+}
+
+.meta-value {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.price {
+  font-size: 1.12rem;
+  font-weight: 900;
+  color: #166534;
+}
+
+.kilos {
+  font-weight: 700;
+}
+
+.meta-stock {
+  opacity: .9;
+}
+
+/* CANTIDAD */
+.product-qty {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.qty-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.qty-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 900;
+  color: #ffffff;
+  background: #22c55e;
+  box-shadow: 0 10px 18px rgba(34, 197, 94, 0.35);
+}
+
+.qty-btn.minus {
+  background: #9ca3af;
+  box-shadow: none;
+}
+
+.qty-btn[disabled] {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+/* ✅ Agregar */
+.btn-add {
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: rgba(34,197,94,.12);
+  color: #166534;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-add[disabled] {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+.btn-add__hint {
+  font-weight: 600;
+  opacity: .8;
+  font-size: .9em;
+}
+
+/* ======================================
+   BOTÓN FLOTANTE CARRITO
+   ====================================== */
+
+.floating-cart {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  border-radius: 999px;
+  border: none;
+  padding: 12px 18px;
+  background: #22c55e;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 0.95rem;
+  box-shadow: 0 10px 28px rgba(34, 197, 94, 0.4);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* ======================================
+   INFO PALTERÍA
+   ====================================== */
+
+.palteria-info {
+  max-width: 1120px;
+  margin: 32px auto 0 auto;
+  padding: 0 4px 40px 4px;
+}
+
+.palteria-info__card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px 18px 14px 18px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  margin-bottom: 18px;
+}
+
+.palteria-info__card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  color: #111827;
+}
+
+.palteria-info__card p {
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.palteria-info__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.info-box {
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 12px 14px;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+.info-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.info-icon {
+  font-size: 18px;
+  color: #16a34a;
+}
+
+.info-box h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin: 0;
+  color: #111827;
+}
+
+.info-box .whats {
+  font-weight: 600;
+  color: #16a34a;
+}
+
+/* ======================================
+   ANIMACIONES
+   ====================================== */
+
+@keyframes pulse-card {
+  0%   { transform: translateY(0) scale(1); }
+  50%  { transform: translateY(-2px) scale(1.01); }
+  100% { transform: translateY(0) scale(1); }
+}
+
+.product-card--pulse {
+  animation: pulse-card 0.22s ease-out;
+}
+
+@keyframes bounce-total {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.06); }
+  60%  { transform: scale(0.97); }
+  100% { transform: scale(1); }
+}
+
+.cart-floating--bounce {
+  animation: bounce-total 0.25s ease-out;
+}
+
+.product-qty button {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.product-qty button:active {
+  transform: scale(0.92);
+}
+
+/* ======================================
+   RESPONSIVE (mobile-first)
+   ====================================== */
+
+.catalog-page,
+.catalog-nav,
+.hero-rappi,
+.catalog-grid,
+.palteria-info,
+.daybar {
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .catalog-nav {
+    margin: 8px;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .catalog-nav__left {
+    flex: 1 1 100%;
+    justify-content: space-between;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .catalog-nav__logo {
+    font-size: 1rem;
+    white-space: nowrap;
+  }
+
+  .catalog-nav__links {
+    display: none;
+  }
+
+  .catalog-nav__right {
+    flex: 1 1 100%;
+    display: flex;
+    justify-content: stretch;
+  }
+
+  .btn-primary-nav {
+    width: 100%;
+    padding: 10px 16px;
+  }
+
+  .daybar {
+    margin: 10px 8px 0 8px;
+    padding: 12px 12px;
+    border-radius: 14px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .daybar__right {
+    display: flex;
+    justify-content: stretch;
+  }
+
+  .btn-daybar {
+    width: 100%;
+  }
+
+  .hero-rappi {
+    margin: 10px 8px 0 8px;
+    padding: 22px 16px;
+    border-radius: 18px;
+  }
+
+  .hero-rappi h1 {
+    font-size: 1.45rem;
+    line-height: 1.15;
+    margin-bottom: 8px;
+  }
+
+  .btn-hero {
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .catalog-grid {
+    margin-top: 16px;
+    padding: 0 8px;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .product-image-wrapper {
+    height: 150px;
+  }
+
+  .product-meta {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .qty-btn {
+    width: 42px;
+    height: 42px;
+    font-size: 20px;
+  }
+
+  .qty-label {
+    font-size: 0.95rem;
+  }
+
+  .floating-cart {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    justify-content: center;
+    padding: 14px 14px;
+    font-size: 0.95rem;
+  }
+
+  .palteria-info {
+    padding: 0 8px 40px 8px;
+  }
+
+  .palteria-info__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 380px) {
+  .hero-rappi h1 {
+    font-size: 1.28rem;
+  }
+
+  .product-name {
+    font-size: 1rem;
+  }
+
+  .price {
+    font-size: 1.05rem;
+  }
+}

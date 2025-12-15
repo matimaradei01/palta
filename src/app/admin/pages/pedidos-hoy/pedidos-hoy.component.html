@@ -1,0 +1,47 @@
+<div style="padding: 16px;">
+  <h2>Pedidos de hoy</h2>
+
+  <div *ngIf="pedidos.length === 0" style="opacity:.7; margin-top:8px;">
+    No hay pedidos todavía.
+  </div>
+
+  <div *ngFor="let p of pedidos" class="card" style="margin-top:12px; padding:12px; border-radius:14px;">
+    <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
+      <div>
+        <div style="font-weight:700;">
+          {{ p.comercio || 'Sin nombre de comercio' }}
+        </div>
+        <div style="opacity:.8; margin-top:4px;">
+          📞 {{ p.clienteTelefono }} · 📍 {{ p.localidad }} · 🏠 {{ p.direccion }}
+        </div>
+        <div style="opacity:.8; margin-top:4px;" *ngIf="p.horario">
+          ⏰ Horario: {{ p.horario }}
+        </div>
+        <div style="opacity:.8; margin-top:4px;">
+          📦 {{ p.totalCajones }} cajones · 💰 {{ p.totalEstimado | currency:'ARS' }}
+        </div>
+        <div style="margin-top:6px;">
+          <strong>Estado:</strong> {{ p.estado }}
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:8px; min-width:160px;">
+        <a class="btn btn-sm" [href]="mapaUrl(p)" target="_blank">Ver mapa</a>
+
+        <button class="btn btn-sm" (click)="setEstado(p, 'pendiente')">Pendiente</button>
+        <button class="btn btn-sm" (click)="setEstado(p, 'en_camino')">En camino</button>
+        <button class="btn btn-sm" (click)="setEstado(p, 'entregado')">Entregado</button>
+      </div>
+    </div>
+
+    <div style="margin-top:10px; border-top:1px solid rgba(0,0,0,.08); padding-top:10px;">
+      <div style="font-weight:600; margin-bottom:6px;">Items</div>
+      <div *ngFor="let it of p.items" style="opacity:.9;">
+        • {{ it.cantidadCajones }} x {{ it.nombre }}
+      </div>
+      <div *ngIf="p.notas" style="margin-top:8px; opacity:.85;">
+        📝 {{ p.notas }}
+      </div>
+    </div>
+  </div>
+</div>

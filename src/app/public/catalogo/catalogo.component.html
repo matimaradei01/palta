@@ -1,0 +1,218 @@
+<div class="catalog-page">
+
+  <!-- SUB-NAV -->
+  <nav class="catalog-nav">
+    <div class="catalog-nav__left">
+      <div class="catalog-nav__logo">
+        🥑 <span>Paltería</span>
+      </div>
+
+      <div class="catalog-nav__links">
+        <a>Catálogo</a>
+        <a>Promos</a>
+        <a>Info</a>
+      </div>
+    </div>
+
+    <div class="catalog-nav__right">
+      <button class="btn-primary-nav" (click)="irAlCheckout()" [disabled]="totalCajones() === 0">
+        Hacer pedido
+      </button>
+    </div>
+  </nav>
+
+  <!-- ✅ BARRA DE ESTADO (siempre visible) -->
+  <section class="daybar" [class.daybar--empty]="productos.length === 0">
+    <div class="daybar__left">
+      <div class="daybar__title">
+        <span class="dot" [class.dot--ok]="productos.length > 0"></span>
+        <strong>Stock de hoy</strong>
+        <span class="muted">· {{ hoyLabel }}</span>
+      </div>
+      <div class="daybar__subtitle" *ngIf="productos.length > 0">
+        Precios por cajón · Armá tu pedido en 1 minuto
+      </div>
+      <div class="daybar__subtitle" *ngIf="productos.length === 0">
+        Aún no cargamos el stock de hoy.
+      </div>
+    </div>
+
+    <div class="daybar__right">
+      <button class="btn-daybar" (click)="scrollToCatalog()">
+        Ver productos
+      </button>
+    </div>
+  </section>
+
+  <!-- HERO (solo “grande” si es primera visita / no recurrente) -->
+  <section class="hero-rappi" *ngIf="mostrarHeroGrande">
+    <div class="hero-rappi__content">
+      <h1>Stock y precios de hoy</h1>
+      <p>
+        Precios por cajón · Stock real · Pedido en menos de un minuto.
+      </p>
+      <button class="btn-hero" (click)="marcarHeroVistoYBajar()">
+        Empezar pedido
+      </button>
+    </div>
+  </section>
+
+  <!-- ✅ MENSAJE SI NO HAY STOCK PUBLICADO -->
+  <div *ngIf="productos.length === 0" class="empty-state">
+    <div class="empty-state__box">
+      <strong>Aún no cargamos el stock de hoy.</strong>
+      <div class="empty-state__hint">
+        Volvé en un rato o escribinos por WhatsApp para consultar disponibilidad.
+      </div>
+    </div>
+  </div>
+
+  <!-- GRID DE PRODUCTOS -->
+  <section class="catalog-grid" #catalogoGrid>
+    <div
+      class="product-card"
+      *ngFor="let p of productos"
+      [class.product-card--pulse]="animandoProductoId === p.id"
+      [class.product-card--out]="stockDe(p) === 0"
+    >
+
+      <!-- Badge (dinámico) -->
+      <div class="product-badge" [class.badge-out]="stockDe(p) === 0" [class.badge-low]="stockDe(p) > 0 && stockDe(p) <= 3">
+        <ng-container *ngIf="stockDe(p) === 0">Sin stock</ng-container>
+        <ng-container *ngIf="stockDe(p) > 0 && stockDe(p) <= 3">Últimos cajones</ng-container>
+        <ng-container *ngIf="stockDe(p) > 3">Premium</ng-container>
+      </div>
+
+      <!-- Imagen -->
+      <div class="product-image-wrapper">
+        <img
+          *ngIf="p.imagenUrl"
+          [src]="p.imagenUrl"
+          alt="{{ p.nombre }}"
+          class="product-image"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+
+      <!-- Info -->
+      <div class="product-info">
+        <h3 class="product-name">{{ p.nombre }}</h3>
+        <p class="product-desc">{{ p.descripcion }}</p>
+
+        <div class="product-meta">
+          <div class="meta-item">
+            <span class="meta-label">Precio por cajón</span>
+            <span class="meta-value price">
+              {{ p.precioPorCajon | currency:'ARS' }}
+            </span>
+          </div>
+
+          <div class="meta-item meta-right">
+            <span class="meta-label">Kilos</span>
+            <span class="meta-value kilos">
+              {{ p.kilosPorCajon }} kg
+            </span>
+          </div>
+
+          <!-- stock visible solo si viene -->
+          <div class="meta-item meta-stock" *ngIf="stockDe(p) !== null">
+            <span class="meta-label">Stock</span>
+            <span class="meta-value">
+              {{ stockDe(p) }} caj.
+            </span>
+          </div>
+        </div>
+
+        <!-- ✅ UX: si está en 0 -> “Agregar” (más fácil) -->
+        <div class="product-qty" *ngIf="cantidadDe(p) > 0; else addMode">
+          <button class="qty-btn minus" (click)="restar(p)">−</button>
+
+          <span class="qty-label">
+            {{ cantidadDe(p) }} cajones
+          </span>
+
+          <button class="qty-btn plus" (click)="sumar(p)" [disabled]="stockDe(p) === 0">+</button>
+        </div>
+
+        <ng-template #addMode>
+          <button class="btn-add" (click)="sumar(p)" [disabled]="stockDe(p) === 0">
+            <span>Agregar</span>
+            <span class="btn-add__hint" *ngIf="stockDe(p) !== null && stockDe(p) > 0">({{ stockDe(p) }} disponibles)</span>
+          </button>
+        </ng-template>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTÓN FLOTANTE DE CARRITO -->
+  <button
+    class="floating-cart"
+    [class.cart-floating--bounce]="animandoTotal"
+    *ngIf="totalCajones() > 0"
+    (click)="irAlCheckout()"
+  >
+    🧺 Confirmar pedido · {{ totalCajones() }} caj. · {{ totalEstimado() | currency:'ARS' }}
+  </button>
+
+  <!-- SECCIÓN INFO PALTERÍA -->
+  <section class="palteria-info">
+
+    <div class="palteria-info__card">
+      <h3>La Paltería · Distribuidora de paltas</h3>
+      <p>
+        Somos una paltería mayorista especializada en Hass de primera calidad.
+        Atendemos verdulerías, restaurantes, catering y comercios de zona oeste y CABA.
+      </p>
+    </div>
+
+    <div class="palteria-info__grid">
+
+      <div class="info-box">
+        <div class="info-title">
+          <i class="material-icons info-icon">place</i>
+          <h4>Ubicación</h4>
+        </div>
+        <p>
+          Castelar · Esquina Carlos Casares y Los Incas<br />
+          Negocio local con atención personalizada.
+        </p>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">
+          <i class="material-icons info-icon">schedule</i>
+          <h4>Horarios</h4>
+        </div>
+        <p>
+          Lunes a viernes: 9 a 18 hs<br />
+          Sábados: 9 a 14 hs
+        </p>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">
+          <i class="material-icons info-icon">local_shipping</i>
+          <h4>Envíos</h4>
+        </div>
+        <p>
+          Envíos sin cargo en CABA y GBA<br />
+          Consultanos por otras zonas.
+        </p>
+      </div>
+
+      <div class="info-box">
+        <div class="info-title">
+          <i class="material-icons info-icon">chat</i>
+          <h4>Contacto</h4>
+        </div>
+        <p>
+          Pedidos y consultas por WhatsApp<br />
+          <span class="whats">“Escribinos para coordinar tu pedido”</span>
+        </p>
+      </div>
+
+    </div>
+  </section>
+</div>
