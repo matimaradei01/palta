@@ -17,7 +17,7 @@ export interface StockHoy {
   publicado: boolean;
 }
 
-export type PedidoEstado = 'pendiente' | 'en_camino' | 'entregado' | 'cancelado';
+export type PedidoEstado = 'pendiente' | 'preparando' | 'en_camino' | 'entregado' | 'cancelado';
 
 export interface PedidoGuardado {
   id: string;

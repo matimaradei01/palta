@@ -11,7 +11,9 @@ import { CatalogoComponent } from './public/catalogo/catalogo.component';
 import { CheckoutComponent } from './public/checkout/checkout.component';
 import { PublicLayoutComponent } from './layouts/public-layout/public-layout.component';
 import { BrowserModule, Title, Meta } from '@angular/platform-browser';
-import { StockHoyComponent } from './admin/pages/stock-hoy/stock-hoy.component';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { environment } from '../environments/environment';
 
 
 @NgModule({
@@ -23,6 +25,10 @@ import { StockHoyComponent } from './admin/pages/stock-hoy/stock-hoy.component';
     ComponentsModule,
     RouterModule,
     AppRoutingModule,
+
+        // 🔥 Firebase inicializado con environment
+    provideFirebaseApp(() => initializeApp(environment.firebase)),
+    provideFirestore(() => getFirestore()),
   ],
   declarations: [
     AppComponent,

@@ -1,47 +1,134 @@
-<div style="padding: 16px;">
-  <h2>Pedidos de hoy</h2>
+<div class="pedidos-page">
 
-  <div *ngIf="pedidos.length === 0" style="opacity:.7; margin-top:8px;">
-    No hay pedidos todavía.
-  </div>
-
-  <div *ngFor="let p of pedidos" class="card" style="margin-top:12px; padding:12px; border-radius:14px;">
-    <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start;">
-      <div>
-        <div style="font-weight:700;">
-          {{ p.comercio || 'Sin nombre de comercio' }}
-        </div>
-        <div style="opacity:.8; margin-top:4px;">
-          📞 {{ p.clienteTelefono }} · 📍 {{ p.localidad }} · 🏠 {{ p.direccion }}
-        </div>
-        <div style="opacity:.8; margin-top:4px;" *ngIf="p.horario">
-          ⏰ Horario: {{ p.horario }}
-        </div>
-        <div style="opacity:.8; margin-top:4px;">
-          📦 {{ p.totalCajones }} cajones · 💰 {{ p.totalEstimado | currency:'ARS' }}
-        </div>
-        <div style="margin-top:6px;">
-          <strong>Estado:</strong> {{ p.estado }}
-        </div>
-      </div>
-
-      <div style="display:flex; flex-direction:column; gap:8px; min-width:160px;">
-        <a class="btn btn-sm" [href]="mapaUrl(p)" target="_blank">Ver mapa</a>
-
-        <button class="btn btn-sm" (click)="setEstado(p, 'pendiente')">Pendiente</button>
-        <button class="btn btn-sm" (click)="setEstado(p, 'en_camino')">En camino</button>
-        <button class="btn btn-sm" (click)="setEstado(p, 'entregado')">Entregado</button>
-      </div>
+  <div class="page-header">
+    <div class="page-title">
+      <h1>Pedidos de hoy</h1>
+      <p>Filtrá, priorizá, cambiá estado y avisá al cliente por WhatsApp.</p>
     </div>
 
-    <div style="margin-top:10px; border-top:1px solid rgba(0,0,0,.08); padding-top:10px;">
-      <div style="font-weight:600; margin-bottom:6px;">Items</div>
-      <div *ngFor="let it of p.items" style="opacity:.9;">
-        • {{ it.cantidadCajones }} x {{ it.nombre }}
-      </div>
-      <div *ngIf="p.notas" style="margin-top:8px; opacity:.85;">
-        📝 {{ p.notas }}
-      </div>
+    <div>
+      <button class="btn btn-sm btn-default" (click)="refrescar()">Actualizar</button>
     </div>
   </div>
+
+  <!-- FILTROS -->
+  <div class="filters">
+    <div class="tool">
+      <label>Buscar</label>
+      <input
+        class="form-control"
+        [(ngModel)]="busqueda"
+        (input)="aplicarFiltros()"
+        placeholder="ID, teléfono, comercio, dirección..."
+      />
+    </div>
+
+    <div class="tool">
+      <label>Estado</label>
+      <select class="form-control" [(ngModel)]="filtro" (change)="aplicarFiltros()">
+        <option value="todos">Todos</option>
+        <option value="pendiente">Pendiente</option>
+        <option value="preparando">Preparando</option>
+        <option value="en_camino">En camino</option>
+        <option value="entregado">Entregado</option>
+        <option value="cancelado">Cancelado</option>
+      </select>
+    </div>
+
+    <div class="tool checkbox">
+      <label>
+        <input type="checkbox" [(ngModel)]="soloNoEntregados" (change)="aplicarFiltros()" />
+        Ocultar entregados/cancelados
+      </label>
+    </div>
+  </div>
+
+  <!-- VACÍO -->
+  <div *ngIf="pedidosView.length === 0" class="empty">
+    No hay pedidos para mostrar con estos filtros.
+  </div>
+
+  <!-- LISTA -->
+  <div class="pedido" *ngFor="let p of pedidosView">
+    <div class="pedido-top">
+
+      <!-- LEFT -->
+      <div class="left">
+        <div class="line1">
+          <span class="id">{{ p.id }}</span>
+
+          <span
+            class="estado-pill"
+            [class.e1]="p.estado==='pendiente'"
+            [class.e2]="p.estado==='preparando'"
+            [class.e3]="p.estado==='en_camino'"
+            [class.e4]="p.estado==='entregado'"
+            [class.e5]="p.estado==='cancelado'"
+          >
+            {{ labelEstado(p.estado) }}
+          </span>
+
+          <span class="hora">{{ p.creadoISO | date:'HH:mm' }}</span>
+        </div>
+
+        <div class="line2">
+          <strong>{{ p.cliente.localidad }}</strong> · {{ p.cliente.direccion }}
+          <span *ngIf="p.cliente.comercio"> · {{ p.cliente.comercio }}</span>
+        </div>
+
+        <div class="line3">
+          Tel: <strong>{{ p.cliente.telefono }}</strong>
+          <span *ngIf="p.cliente.horario"> · Horario: {{ p.cliente.horario }}</span>
+          <span *ngIf="p.cliente.cuit"> · CUIT: {{ p.cliente.cuit }}</span>
+        </div>
+
+        <!-- ITEMS -->
+        <div class="items" *ngIf="p.items?.length; else sinItems">
+          <div class="item" *ngFor="let it of p.items">
+            <span class="qty">{{ it.cantidadCajones }}x</span>
+            <span class="name">{{ it.nombre }}</span>
+            <span class="price">{{ (it.precioPorCajon * it.cantidadCajones) | currency:'ARS' }}</span>
+          </div>
+        </div>
+
+        <ng-template #sinItems>
+          <div class="items" style="opacity:.7;">
+            (Sin items guardados en este pedido)
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="right">
+        <div class="totales">
+          <div class="cajones"><strong>{{ p.totalCajones }}</strong> cajones</div>
+          <div class="monto">{{ p.totalEstimado | currency:'ARS' }}</div>
+        </div>
+
+        <div class="actions">
+          <button
+            class="btn btn-sm btn-info"
+            (click)="siguienteEstado(p)"
+            [disabled]="p.estado==='entregado' || p.estado==='cancelado'"
+          >
+            {{ labelSiguiente(p.estado) }}
+          </button>
+
+          <button class="btn btn-sm btn-default" (click)="avisarCliente(p)">
+            WhatsApp cliente
+          </button>
+
+          <div class="mini-actions">
+            <button class="btn btn-sm btn-default" (click)="setEstado(p,'pendiente')">P</button>
+            <button class="btn btn-sm btn-default" (click)="setEstado(p,'preparando')">Pr</button>
+            <button class="btn btn-sm btn-default" (click)="setEstado(p,'en_camino')">🚚</button>
+            <button class="btn btn-sm btn-default" (click)="setEstado(p,'entregado')">✓</button>
+            <button class="btn btn-sm btn-danger" (click)="borrar(p)">🗑</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
 </div>

@@ -1,47 +1,58 @@
 <div class="checkout-page" *ngIf="pedidoService.getTotalCajones() > 0; else sinPedido">
 
-  <!-- HEADER / PASOS -->
-  <section class="checkout-header">
-    <h1>Confirmá tu pedido mayorista</h1>
-    <p>Datos mínimos para coordinar entrega. Lo demás es opcional.</p>
+  <!-- TOP BAR -->
+  <section class="topbar">
+    <div class="topbar__left">
+      <button type="button" class="btn-back" (click)="volverAlCatalogo()">
+        <i class="material-icons">arrow_back</i>
+        <span>Volver</span>
+      </button>
 
-    <div class="checkout-steps">
-      <div class="step done">
-        <div class="circle">
-          <i class="material-icons step-icon">shopping_cart</i>
-        </div>
-        <span>Armar pedido</span>
+      <div class="topbar__title">
+        <h1>Confirmar pedido</h1>
+        <p>Datos mínimos para coordinar entrega.</p>
       </div>
+    </div>
 
-      <div class="step active">
-        <div class="circle">
-          <i class="material-icons step-icon">store</i>
-        </div>
-        <span>Entrega</span>
-      </div>
-
-      <div class="step">
-        <div class="circle">
-          <i class="material-icons step-icon">check_circle</i>
-        </div>
-        <span>Confirmación</span>
+    <div class="topbar__right">
+      <div class="pill">
+        <span class="muted">Total</span>
+        <strong>{{ pedidoService.getTotalEstimado() | currency:'ARS' }}</strong>
       </div>
     </div>
   </section>
 
-  <!-- LAYOUT: FORM + RESUMEN -->
+  <!-- STEPS (más chiquito / limpio) -->
+  <section class="steps">
+    <div class="step done">
+      <span class="dot"></span>
+      <span>Pedido</span>
+    </div>
+    <div class="sep"></div>
+    <div class="step active">
+      <span class="dot"></span>
+      <span>Entrega</span>
+    </div>
+    <div class="sep"></div>
+    <div class="step">
+      <span class="dot"></span>
+      <span>Listo</span>
+    </div>
+  </section>
+
+  <!-- LAYOUT -->
   <section class="checkout-layout">
 
-    <!-- FORMULARIO -->
+    <!-- FORM -->
     <div class="card checkout-card checkout-form">
-      <h2>Datos para la entrega</h2>
-      <p class="subtitle">
-        Con estos datos ya podemos coordinar. Si necesitás factura, activalo abajo.
-      </p>
+      <div class="card-head">
+        <h2>Datos de entrega</h2>
+        <p class="subtitle">Con esto ya coordinamos. El resto es opcional.</p>
+      </div>
 
       <form novalidate>
 
-        <!-- TELÉFONO (OBLIGATORIO) -->
+        <!-- TEL -->
         <div class="form-group">
           <label>Teléfono (WhatsApp)</label>
 
@@ -67,57 +78,68 @@
             </button>
           </div>
 
+          <div class="field-error" *ngIf="formErrors.telefono">
+            {{ formErrors.telefono }}
+          </div>
+
           <div class="field-hint" *ngIf="telefonoBloqueado">
-            Usamos este número para coordinar por WhatsApp
+            Usamos este número para coordinar por WhatsApp.
           </div>
         </div>
 
-
-        <!-- DIRECCIÓN (OBLIGATORIO) -->
+        <!-- DIRECCION -->
         <div class="form-group">
-          <label>Dirección de entrega</label>
-          <input
-            type="text"
-            class="form-control"
-            name="direccion"
-            [(ngModel)]="form.direccion"
-            placeholder="Calle y número (piso/depto si aplica)" />
+          <label>Dirección</label>
+          <div class="input-with-icon">
+            <i class="material-icons input-icon">place</i>
+            <input
+              type="text"
+              class="form-control"
+              name="direccion"
+              [(ngModel)]="form.direccion"
+              placeholder="Calle y número (piso/depto si aplica)" />
+          </div>
+
           <div class="field-error" *ngIf="formErrors.direccion">
             {{ formErrors.direccion }}
           </div>
         </div>
 
-        <!-- LOCALIDAD (OBLIGATORIO) -->
+        <!-- LOCALIDAD -->
         <div class="form-group">
           <label>Localidad / Barrio</label>
-          <input
-            type="text"
-            class="form-control"
-            name="localidad"
-            [(ngModel)]="form.localidad"
-            placeholder="Ej: Castelar / Morón / CABA" />
+          <div class="input-with-icon">
+            <i class="material-icons input-icon">location_city</i>
+            <input
+              type="text"
+              class="form-control"
+              name="localidad"
+              [(ngModel)]="form.localidad"
+              placeholder="Ej: Castelar / Morón / CABA" />
+          </div>
+
           <div class="field-error" *ngIf="formErrors.localidad">
             {{ formErrors.localidad }}
           </div>
         </div>
 
-        <!-- BLOQUE OPCIONAL (COLAPSABLE SIMPLE) -->
-        <div class="form-group" style="margin-top: 10px;">
-          <div style="display:flex; align-items:center; gap:10px;">
+        <!-- OPCIONALES -->
+        <div class="section-toggle">
+          <label class="toggle-row">
             <input
               type="checkbox"
               id="mostrarOpcionales"
               name="mostrarOpcionales"
               [(ngModel)]="form.mostrarOpcionales" />
-            <label for="mostrarOpcionales" style="margin:0; cursor:pointer;">
-              Agregar datos opcionales (comercio / horario / notas)
-            </label>
-          </div>
+            <span class="toggle-text">
+              Agregar datos opcionales
+              <small>comercio · horario · notas</small>
+            </span>
+          </label>
         </div>
 
-        <div *ngIf="form.mostrarOpcionales">
+        <div class="optional-block" *ngIf="form.mostrarOpcionales">
 
-          <!-- NOMBRE COMERCIO (OPCIONAL) -->
           <div class="form-group">
             <label>Nombre del comercio (opcional)</label>
             <div class="input-with-icon">
@@ -129,17 +151,12 @@
                 [(ngModel)]="form.comercio"
                 placeholder="Ej: Verdulería San Juan" />
             </div>
-            <div class="field-error" *ngIf="formErrors.comercio">
-              {{ formErrors.comercio }}
-            </div>
           </div>
 
-          <!-- HORARIO (OPCIONAL - SIMPLE) -->
           <div class="form-group">
             <label>Horario preferido (opcional)</label>
             <div class="input-with-icon">
               <i class="material-icons input-icon">schedule</i>
-
               <select
                 class="form-control"
                 name="horario"
@@ -149,12 +166,9 @@
                 <option value="mediodia">Mediodía (12 a 15)</option>
                 <option value="tarde">Tarde (15 a 18)</option>
               </select>
-
             </div>
           </div>
 
-
-          <!-- NOTAS (OPCIONAL) -->
           <div class="form-group">
             <label>Notas (opcional)</label>
             <textarea
@@ -167,51 +181,113 @@
 
         </div>
 
-        <!-- FACTURA (TOGGLE) -->
-        <div class="form-group" style="margin-top: 6px;">
-          <div style="display:flex; align-items:center; gap:10px;">
+        <!-- FACTURA -->
+        <div class="section-toggle">
+          <label class="toggle-row">
             <input
               type="checkbox"
               id="necesitaFactura"
               name="necesitaFactura"
               [(ngModel)]="form.necesitaFactura" />
-            <label for="necesitaFactura" style="margin:0; cursor:pointer;">
+            <span class="toggle-text">
               Necesito factura
-            </label>
-          </div>
+              <small>te pedimos CUIT</small>
+            </span>
+          </label>
         </div>
 
-        <!-- CUIT SOLO SI PIDE FACTURA -->
         <div class="form-group" *ngIf="form.necesitaFactura">
           <label>CUIT</label>
-          <input
-            type="text"
-            class="form-control"
-            name="cuit"
-            [(ngModel)]="form.cuit"
-            placeholder="Ej: 20-12345678-9" />
+          <div class="input-with-icon">
+            <i class="material-icons input-icon">badge</i>
+            <input
+              type="text"
+              class="form-control"
+              name="cuit"
+              [(ngModel)]="form.cuit"
+              placeholder="Ej: 20-12345678-9" />
+          </div>
+
           <div class="field-error" *ngIf="formErrors.cuit">
             {{ formErrors.cuit }}
           </div>
         </div>
 
-        <!-- BOTÓN CONFIRMAR -->
+        <!-- CTA DESKTOP (en mobile va en bottom bar) -->
         <button
           type="button"
-          class="btn-confirmar"
+          class="btn-confirmar btn-desktop"
           (click)="confirmarPedido()"
           [disabled]="items.length === 0">
           Confirmar pedido
         </button>
+
+        <div class="safe-note">
+          Una vez confirmado, coordinamos entrega y forma de pago.
+        </div>
 
       </form>
     </div>
 
     <!-- RESUMEN -->
     <div class="card checkout-card checkout-summary">
-      <h2>Resumen del pedido</h2>
+      <div class="summary-head">
+        <h2>Resumen</h2>
 
-      <div class="summary-list">
+        <!-- colapsable SOLO en mobile -->
+        <label class="summary-collapse">
+          <input type="checkbox" class="summary-collapse__chk" />
+          <span class="summary-collapse__btn">
+            Ver / ocultar
+            <i class="material-icons">expand_more</i>
+          </span>
+
+          <div class="summary-collapse__panel">
+            <div class="summary-list">
+              <div class="summary-item" *ngFor="let item of items">
+                <div class="summary-left">
+                  <div class="summary-name">
+                    <i class="material-icons summary-bullet">inventory_2</i>
+                    <span>{{ item.producto.nombre }}</span>
+                  </div>
+
+                  <div class="summary-detail">
+                    {{ item.cantidadCajones }} caj. ·
+                    {{ item.producto.kilosPorCajon * item.cantidadCajones }} kg
+                  </div>
+
+                  <div class="summary-qty">
+                    <button type="button" (click)="restar(item)" aria-label="Restar">
+                      <i class="material-icons">remove</i>
+                    </button>
+
+                    <span>{{ item.cantidadCajones }}</span>
+
+                    <button type="button" (click)="sumar(item)" aria-label="Sumar">
+                      <i class="material-icons">add</i>
+                    </button>
+
+                    <button type="button" class="summary-remove" (click)="eliminarItem(item)" aria-label="Eliminar">
+                      <i class="material-icons">delete</i>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="summary-price">
+                  {{ item.producto.precioPorCajon * item.cantidadCajones | currency:'ARS' }}
+                </div>
+              </div>
+
+              <p *ngIf="items.length === 0" class="no-items">
+                No hay productos en el pedido.
+              </p>
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <!-- desktop list (siempre visible) -->
+      <div class="summary-list summary-desktop">
         <div class="summary-item" *ngFor="let item of items">
           <div class="summary-left">
             <div class="summary-name">
@@ -220,11 +296,10 @@
             </div>
 
             <div class="summary-detail">
-              {{ item.cantidadCajones }} cajones ·
+              {{ item.cantidadCajones }} caj. ·
               {{ item.producto.kilosPorCajon * item.cantidadCajones }} kg
             </div>
 
-            <!-- CONTROLES DE CANTIDAD -->
             <div class="summary-qty">
               <button type="button" (click)="restar(item)">
                 <i class="material-icons">remove</i>
@@ -243,28 +318,20 @@
             {{ item.producto.precioPorCajon * item.cantidadCajones | currency:'ARS' }}
           </div>
         </div>
-
-        <p *ngIf="items.length === 0" class="no-items">
-          No hay productos en el pedido.
-        </p>
       </div>
 
       <div class="summary-footer" [class.summary-footer--bounce]="animandoResumen">
         <div class="line">
-          <span>Cajones totales</span>
-          <span>{{ pedidoService.getTotalCajones() }}</span>
+          <span>Cajones</span>
+          <span><strong>{{ pedidoService.getTotalCajones() }}</strong></span>
         </div>
         <div class="line total">
-          <span>Total estimado</span>
+          <span>Total</span>
           <span class="total-pill">
             {{ pedidoService.getTotalEstimado() | currency:'ARS' }}
           </span>
         </div>
       </div>
-
-      <p class="summary-note">
-        Una vez confirmado el pedido, nos contactamos para coordinar entrega y forma de pago.
-      </p>
 
       <button type="button" class="btn-volver-catalogo" (click)="volverAlCatalogo()">
         Seguir editando el pedido
@@ -272,6 +339,26 @@
     </div>
 
   </section>
+
+  <!-- ✅ BOTTOM BAR MOBILE (CTA fijo) -->
+  <div class="bottom-bar" *ngIf="items.length > 0">
+    <div class="bottom-bar__info">
+      <div class="bb-total">
+        <span class="muted">{{ pedidoService.getTotalCajones() }} caj.</span>
+        <strong>{{ pedidoService.getTotalEstimado() | currency:'ARS' }}</strong>
+      </div>
+      <div class="bb-hint">Confirmás y coordinamos entrega.</div>
+    </div>
+
+    <button
+      type="button"
+      class="btn-confirmar bb-btn"
+      (click)="confirmarPedido()">
+      Confirmar
+      <span class="bb-arrow">→</span>
+    </button>
+  </div>
+
 </div>
 
 <ng-template #sinPedido>

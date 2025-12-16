@@ -3,6 +3,7 @@ import { PedidoService, PedidoItem } from '../../services/pedido.service';
 import { Router } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { AdminDataService } from '../../admin/services/admin-data.service';
+import { PedidosDataService } from '../../admin/services/pedidos-data.service';
 
 
 type Cliente = {
@@ -58,11 +59,12 @@ export class CheckoutComponent implements OnInit {
   animandoResumen = false;
 
   constructor(
+    private pedidosData: PedidosDataService,
     public pedidoService: PedidoService,
     private router: Router,
     private title: Title,
-    private adminData: AdminDataService,
-    private meta: Meta
+    private meta: Meta,
+    private adminData: AdminDataService
   ) {}
 
   ngOnInit(): void {
@@ -336,33 +338,30 @@ export class CheckoutComponent implements OnInit {
 
     const url = `https://wa.me/${this.numeroPalteria}?text=${mensaje}`;
 
-    this.adminData.addPedido({
-        creadoISO: new Date().toISOString(),
-        clienteTelefono: this.form.telefono,
+// ✅ Guardar pedido para el administrador (sin WhatsApp al negocio)
+this.pedidosData.crearPedido({
+  id: crypto?.randomUUID ? crypto.randomUUID() : `P-${Date.now()}`,
+  creadoISO: new Date().toISOString(),
+  estado: 'pendiente',
+  cliente: {
+    telefono: this.form.telefono,
+    comercio: this.form.comercio || undefined,
+    direccion: this.form.direccion,
+    localidad: this.form.localidad,
+    horario: this.form.horario || undefined,
+    cuit: this.form.necesitaFactura ? (this.normalizarCuit(this.form.cuit) || undefined) : undefined,
+  },
+  items: this.items.map(it => ({
+    productoId: it.producto.id,
+    nombre: it.producto.nombre,
+    kilosPorCajon: it.producto.kilosPorCajon,
+    precioPorCajon: it.producto.precioPorCajon,
+    cantidadCajones: it.cantidadCajones,
+  })),
+  totalCajones: this.pedidoService.getTotalCajones(),
+  totalEstimado: this.pedidoService.getTotalEstimado(),
+});
 
-        comercio: this.form.comercio?.trim() || undefined,
-        direccion: this.form.direccion,
-        localidad: this.form.localidad,
-        horario: this.form.horario || undefined,
-        necesitaFactura: this.form.necesitaFactura,
-        cuit: this.form.necesitaFactura ? (this.form.cuit || undefined) : undefined,
-        notas: this.form.notas?.trim() || undefined,
-
-        items: this.items.map(it => ({
-          productoId: it.producto.id,
-          nombre: it.producto.nombre,
-          kilosPorCajon: it.producto.kilosPorCajon,
-          precioPorCajon: it.producto.precioPorCajon,
-          cantidadCajones: it.cantidadCajones
-        })),
-
-        totalCajones: this.pedidoService.getTotalCajones(),
-        totalEstimado: this.pedidoService.getTotalEstimado(),
-
-        estado: 'pendiente'
-      });
-
-    window.open(url, '_blank');
 
     this.pedidoService.limpiar();
     this.router.navigate(['/']);

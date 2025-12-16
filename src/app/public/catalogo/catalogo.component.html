@@ -3,14 +3,14 @@
   <!-- SUB-NAV -->
   <nav class="catalog-nav">
     <div class="catalog-nav__left">
-      <div class="catalog-nav__logo">
+      <div class="catalog-nav__logo" (click)="scrollToCatalog()" title="Ir al catálogo">
         🥑 <span>Paltería</span>
       </div>
 
       <div class="catalog-nav__links">
-        <a>Catálogo</a>
-        <a>Promos</a>
-        <a>Info</a>
+        <a (click)="scrollToCatalog()">Catálogo</a>
+        <a (click)="scrollToCatalog()">Promos</a>
+        <a (click)="scrollToCatalog()">Info</a>
       </div>
     </div>
 
@@ -29,8 +29,9 @@
         <strong>Stock de hoy</strong>
         <span class="muted">· {{ hoyLabel }}</span>
       </div>
+
       <div class="daybar__subtitle" *ngIf="productos.length > 0">
-        Precios por cajón · Armá tu pedido en 1 minuto
+        Precios por cajón · Stock real · Pedido en 1 minuto
       </div>
       <div class="daybar__subtitle" *ngIf="productos.length === 0">
         Aún no cargamos el stock de hoy.
@@ -44,16 +45,28 @@
     </div>
   </section>
 
-  <!-- HERO (solo “grande” si es primera visita / no recurrente) -->
+  <!-- HERO (solo primera visita) -->
   <section class="hero-rappi" *ngIf="mostrarHeroGrande">
     <div class="hero-rappi__content">
+      <div class="hero-chiprow">
+        <span class="chip">🚚 Entrega AMBA</span>
+        <span class="chip">📦 Stock real</span>
+        <span class="chip">💸 Mayorista</span>
+      </div>
+
       <h1>Stock y precios de hoy</h1>
       <p>
-        Precios por cajón · Stock real · Pedido en menos de un minuto.
+        Armá tu pedido por cajón y confirmalo en segundos.
       </p>
-      <button class="btn-hero" (click)="marcarHeroVistoYBajar()">
-        Empezar pedido
-      </button>
+
+      <div class="hero-actions">
+        <button class="btn-hero" (click)="marcarHeroVistoYBajar()">
+          Empezar pedido
+        </button>
+        <button class="btn-hero-secondary" (click)="scrollToCatalog()">
+          Ver catálogo
+        </button>
+      </div>
     </div>
   </section>
 
@@ -77,7 +90,9 @@
     >
 
       <!-- Badge (dinámico) -->
-      <div class="product-badge" [class.badge-out]="stockDe(p) === 0" [class.badge-low]="stockDe(p) > 0 && stockDe(p) <= 3">
+      <div class="product-badge"
+           [class.badge-out]="stockDe(p) === 0"
+           [class.badge-low]="stockDe(p) > 0 && stockDe(p) <= 3">
         <ng-container *ngIf="stockDe(p) === 0">Sin stock</ng-container>
         <ng-container *ngIf="stockDe(p) > 0 && stockDe(p) <= 3">Últimos cajones</ng-container>
         <ng-container *ngIf="stockDe(p) > 3">Premium</ng-container>
@@ -102,20 +117,19 @@
 
         <div class="product-meta">
           <div class="meta-item">
-            <span class="meta-label">Precio por cajón</span>
+            <span class="meta-label">Precio</span>
             <span class="meta-value price">
               {{ p.precioPorCajon | currency:'ARS' }}
             </span>
           </div>
 
-          <div class="meta-item meta-right">
+          <div class="meta-item">
             <span class="meta-label">Kilos</span>
             <span class="meta-value kilos">
               {{ p.kilosPorCajon }} kg
             </span>
           </div>
 
-          <!-- stock visible solo si viene -->
           <div class="meta-item meta-stock" *ngIf="stockDe(p) !== null">
             <span class="meta-label">Stock</span>
             <span class="meta-value">
@@ -124,21 +138,23 @@
           </div>
         </div>
 
-        <!-- ✅ UX: si está en 0 -> “Agregar” (más fácil) -->
+        <!-- Cantidad -->
         <div class="product-qty" *ngIf="cantidadDe(p) > 0; else addMode">
-          <button class="qty-btn minus" (click)="restar(p)">−</button>
+          <button class="qty-btn minus" (click)="restar(p)" aria-label="Restar">−</button>
 
           <span class="qty-label">
             {{ cantidadDe(p) }} cajones
           </span>
 
-          <button class="qty-btn plus" (click)="sumar(p)" [disabled]="stockDe(p) === 0">+</button>
+          <button class="qty-btn plus" (click)="sumar(p)" [disabled]="stockDe(p) === 0" aria-label="Sumar">+</button>
         </div>
 
         <ng-template #addMode>
           <button class="btn-add" (click)="sumar(p)" [disabled]="stockDe(p) === 0">
             <span>Agregar</span>
-            <span class="btn-add__hint" *ngIf="stockDe(p) !== null && stockDe(p) > 0">({{ stockDe(p) }} disponibles)</span>
+            <span class="btn-add__hint" *ngIf="stockDe(p) !== null && stockDe(p) > 0">
+              ({{ stockDe(p) }} disponibles)
+            </span>
           </button>
         </ng-template>
 
@@ -146,19 +162,25 @@
     </div>
   </section>
 
-  <!-- BOTÓN FLOTANTE DE CARRITO -->
+  <!-- ✅ BOTTOM BAR (mobile) + botón (desktop) -->
   <button
     class="floating-cart"
     [class.cart-floating--bounce]="animandoTotal"
     *ngIf="totalCajones() > 0"
     (click)="irAlCheckout()"
   >
-    🧺 Confirmar pedido · {{ totalCajones() }} caj. · {{ totalEstimado() | currency:'ARS' }}
+    <span class="cart-left">
+      🧺 <strong>Confirmar</strong>
+      <span class="cart-sub">{{ totalCajones() }} caj.</span>
+    </span>
+    <span class="cart-right">
+      {{ totalEstimado() | currency:'ARS' }}
+      <span class="cart-cta">→</span>
+    </span>
   </button>
 
   <!-- SECCIÓN INFO PALTERÍA -->
   <section class="palteria-info">
-
     <div class="palteria-info__card">
       <h3>La Paltería · Distribuidora de paltas</h3>
       <p>
@@ -168,7 +190,6 @@
     </div>
 
     <div class="palteria-info__grid">
-
       <div class="info-box">
         <div class="info-title">
           <i class="material-icons info-icon">place</i>
@@ -212,7 +233,6 @@
           <span class="whats">“Escribinos para coordinar tu pedido”</span>
         </p>
       </div>
-
     </div>
   </section>
 </div>
